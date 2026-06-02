@@ -2,8 +2,8 @@
 import { NextResponse } from "next/server";
 const prisma = new PrismaClient();
 export async function GET() {
-  return NextResponse.json(await prisma.client.findMany());
+  return NextResponse.json(await prisma.professional.findMany());
 }
 export async function POST(req: Request) {
-  return NextResponse.json(await prisma.client.create({ data: await req.json() }), { status: 201 });
+  return NextResponse.json(await prisma.professional.create({ data: await req.json() }), { status: 201 });
 }
