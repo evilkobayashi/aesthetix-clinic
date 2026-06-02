@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id           String        @id @default(cuid())
+  name         String
+  cpf          String?       @unique
+  phone        String
+  email        String?
+  birthDate    DateTime?
+  anamnesis    String?
+  allergies    String?
+  medications  String?
+  contraindications String?
+  createdAt    DateTime      @default(now())
+  appointments Appointment[]
+}
+
+model Professional {
+  id           String        @id @default(cuid())
+  name         String
+  specialty    String
+  councilNum   String?
+  appointments Appointment[]
+}
+
+model Appointment {
+  id             String       @id @default(cuid())
+  client         Client       @relation(fields: [clientId], references: [id])
+  clientId       String
+  professional   Professional @relation(fields: [professionalId], references: [id])
+  professionalId String
+  date           DateTime
+  room           String?
+  status         String       @default("scheduled")
+  notes          String?
+  procedures     Procedure[]
+  createdAt      DateTime     @default(now())
+}
+
+model Procedure {
+  id            String      @id @default(cuid())
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  appointmentId String
+  name          String
+  product       String?
+  concentration String?
+  quantityMl    Float?
+  bodyLocation  String?
+  notes         String?
+  beforePhoto   String?
+  afterPhoto    String?
+  createdAt     DateTime    @default(now())
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  brand       String?
+  batch       String?
+  expiryDate  DateTime?
+  stockUnits  Int      @default(0)
+  alertBelow  Int      @default(5)
+  createdAt   DateTime @default(now())
+}
